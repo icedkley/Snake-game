@@ -4,9 +4,9 @@ const food = document.querySelector(".food");
 let snakeXposition = 0;
 let snakeYPosition = 0;
 let direction = "";
-let foodXposition = Math.round(Math.random() * (500 - 1));
-let foodYposition = Math.round(Math.random() * (500 - 1));
-let foodSpawned = 0;
+let foodXposition = "";
+let foodYposition = "";
+let foodCount = 1;
 
 window.addEventListener("keydown", move);
 
@@ -48,6 +48,25 @@ function checkOutOfBound() {
   }
 }
 
+function spawnFood() {
+  foodX = Math.round(Math.random() * (500 - 1));
+  foodY = Math.round(Math.random() * (500 - 1));
+  food.style.left = foodXposition + "px";
+  food.style.top = foodYposition + "px";
+
+  foodXposition = foodX;
+  foodYposition = foodY;
+}
+
+function checkCollision() {
+  if (
+    Math.abs(snakeXposition - foodXposition) < 25 &&
+    Math.abs(snakeYPosition - foodYposition) < 25
+  ) {
+    food.remove();
+  }
+}
+
 setInterval(() => {
   if (direction == "right") {
     snakeXposition += 25;
@@ -62,29 +81,7 @@ setInterval(() => {
     snakeYPosition += 25;
     snake.style.top = snakeYPosition + "px";
   }
-
-  if (foodSpawned == 0) {
-    spawnFood();
-  }
-
-  checkOutOfBound();
+  spawnFood();
   checkCollision();
+  checkOutOfBound();
 }, 500);
-
-function spawnFood() {
-  food.style.left = foodXposition + "px";
-  food.style.top = foodYposition + "px";
-  foodSpawned = 1;
-  console.log(foodSpawned);
-}
-
-function checkCollision() {
-  if (
-    Math.abs(snakeXposition - foodXposition) < 25 &&
-    Math.abs(snakeYPosition - foodYposition) < 25
-  ) {
-    food.remove();
-    foodSpawned = 0;
-    console.log(foodSpawned);
-  }
-}
