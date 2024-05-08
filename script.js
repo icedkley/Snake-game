@@ -1,12 +1,13 @@
 const game_display = document.querySelector(".game-display");
 const snake = document.querySelector(".snake");
-const food = document.querySelector(".food");
 let snakeXposition = 0;
 let snakeYPosition = 0;
+let food = "";
 let direction = "";
 let foodXposition = "";
 let foodYposition = "";
-let foodCount = 1;
+let foodCount = 0;
+let fps = 60;
 
 window.addEventListener("keydown", move);
 
@@ -49,6 +50,10 @@ function checkOutOfBound() {
 }
 
 function spawnFood() {
+  let foodSpawn = document.createElement("div");
+  foodSpawn.className = "food";
+  food = foodSpawn;
+
   foodX = Math.round(Math.random() * (500 - 1));
   foodY = Math.round(Math.random() * (500 - 1));
   food.style.left = foodXposition + "px";
@@ -56,18 +61,23 @@ function spawnFood() {
 
   foodXposition = foodX;
   foodYposition = foodY;
+
+  foodCount++;
+  document.querySelector(".game-display").append(foodSpawn);
 }
 
 function checkCollision() {
   if (
-    Math.abs(snakeXposition - foodXposition) < 25 &&
-    Math.abs(snakeYPosition - foodYposition) < 25
+    Math.abs(snakeXposition - foodXposition) < 50 &&
+    Math.abs(snakeYPosition - foodYposition) < 50
   ) {
+    console.log("touched");
     food.remove();
+    foodCount = 0;
   }
 }
 
-setInterval(() => {
+function movePerSecond() {
   if (direction == "right") {
     snakeXposition += 25;
     snake.style.left = snakeXposition + "px";
@@ -81,7 +91,18 @@ setInterval(() => {
     snakeYPosition += 25;
     snake.style.top = snakeYPosition + "px";
   }
-  spawnFood();
+}
+
+setInterval(() => {
+  .3. 
+  if (foodCount == 0) {
+    spawnFood();
+  }
+  movePerSecond();
   checkCollision();
   checkOutOfBound();
-}, 500);
+
+  console.clear();
+  console.log(`snake X pos: ${snakeXposition} food X pos: ${foodXposition}`);
+  // console.log(foodCount);
+}, fps);
