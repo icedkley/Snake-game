@@ -6,8 +6,8 @@ let food = "";
 let direction = "";
 let foodXposition = "";
 let foodYposition = "";
-let foodCount = 0;
 let fps = 60;
+let foodOnBoard = 0;
 
 window.addEventListener("keydown", move);
 
@@ -49,34 +49,6 @@ function checkOutOfBound() {
   }
 }
 
-function spawnFood() {
-  let foodSpawn = document.createElement("div");
-  foodSpawn.className = "food";
-  food = foodSpawn;
-
-  foodX = Math.round(Math.random() * (500 - 1));
-  foodY = Math.round(Math.random() * (500 - 1));
-  food.style.left = foodXposition + "px";
-  food.style.top = foodYposition + "px";
-
-  foodXposition = foodX;
-  foodYposition = foodY;
-
-  foodCount++;
-  document.querySelector(".game-display").append(foodSpawn);
-}
-
-function checkCollision() {
-  if (
-    Math.abs(snakeXposition - foodXposition) < 50 &&
-    Math.abs(snakeYPosition - foodYposition) < 50
-  ) {
-    console.log("touched");
-    food.remove();
-    foodCount = 0;
-  }
-}
-
 function movePerSecond() {
   if (direction == "right") {
     snakeXposition += 25;
@@ -93,16 +65,43 @@ function movePerSecond() {
   }
 }
 
-setInterval(() => {
-  .3. 
-  if (foodCount == 0) {
-    spawnFood();
+function spawnFood() {
+  let min = 25;
+  let max = 500;
+
+  let xPos = Math.floor(Math.random() * (max / min)) * min;
+  let yPos = Math.floor(Math.random() * (max / min)) * min;
+
+  foodXposition = xPos;
+  foodYposition = yPos;
+
+  console.log(xPos, yPos);
+
+  let foodDiv = document.createElement("div");
+  foodDiv.className = "food";
+  foodDiv.style.left = xPos + "px";
+  foodDiv.style.top = yPos + "px";
+
+  food = foodDiv;
+  game_display.append(food);
+  foodOnBoard = 1;
+}
+
+function detectCollision() {
+  if (snakeXposition == foodXposition && snakeYPosition == foodYposition) {
+    food.remove();
+    foodOnBoard = 0;
   }
+}
+setInterval(() => {
   movePerSecond();
-  checkCollision();
   checkOutOfBound();
 
-  console.clear();
-  console.log(`snake X pos: ${snakeXposition} food X pos: ${foodXposition}`);
-  // console.log(foodCount);
+  if (foodOnBoard == 0) {
+    spawnFood();
+  }
+
+  detectCollision();
 }, fps);
+
+spawnFood();
