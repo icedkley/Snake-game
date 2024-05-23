@@ -1,5 +1,6 @@
 const game_display = document.querySelector(".game-display");
 const snake = document.querySelector(".snake");
+let scoreCount = document.querySelector(".score_count");
 let snakeXposition = 0;
 let snakeYPosition = 0;
 let food = "";
@@ -8,6 +9,7 @@ let foodXposition = "";
 let foodYposition = "";
 let fps = 60;
 let foodOnBoard = 0;
+let score = 0;
 
 window.addEventListener("keydown", move);
 
@@ -91,6 +93,24 @@ function detectCollision() {
   if (snakeXposition == foodXposition && snakeYPosition == foodYposition) {
     food.remove();
     foodOnBoard = 0;
+    score += 25;
+    scoreCount.innerHTML = score;
+  } else if (
+    Math.abs(snakeXposition - foodXposition) == 25 &&
+    snakeYPosition == foodYposition
+  ) {
+    food.remove();
+    foodOnBoard = 0;
+    score += 25;
+    scoreCount.innerHTML = score;
+  } else if (
+    Math.abs(snakeYPosition - foodYposition) == 25 &&
+    snakeXposition == foodXposition
+  ) {
+    food.remove();
+    foodOnBoard = 0;
+    score += 25;
+    scoreCount.innerHTML = score;
   }
 }
 setInterval(() => {
@@ -101,7 +121,9 @@ setInterval(() => {
     spawnFood();
   }
 
+  // spawnFood();
   detectCollision();
+  let scoreCount = document.querySelector(".score_count");
 }, fps);
 
 spawnFood();
